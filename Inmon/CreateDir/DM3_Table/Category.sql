@@ -1,4 +1,4 @@
-CREATE TABLE `Inmon_DM2`.`Category` (
+CREATE TABLE `Inmon_DM3`.`Category` (
   `Category_key` INT NOT NULL AUTO_INCREMENT,
   `Category1_code` VARCHAR(45) NULL,
   `Category1_name` VARCHAR(45) NULL,

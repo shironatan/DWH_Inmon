@@ -1,4 +1,4 @@
-CREATE TABLE `test_inmon_DM2`.`Official_tweet` (
+CREATE TABLE `Inmon_DM2`.`Official_tweet` (
   `Official_tweet_key` INT NOT NULL AUTO_INCREMENT,
   `Official_tweet_number` VARCHAR(45) NULL,
   `Tweet` VARCHAR(45) NULL,

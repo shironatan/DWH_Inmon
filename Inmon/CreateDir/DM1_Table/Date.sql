@@ -1,4 +1,4 @@
-CREATE TABLE `test_inmon_DM1`.`Date` (
+CREATE TABLE `Inmon_DM1`.`Date` (
   `Date_key` INT NOT NULL AUTO_INCREMENT,
   `Month` INT NULL,
   `Day` INT NULL,

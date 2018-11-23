@@ -1,4 +1,4 @@
 INSERT INTO Date(Date.Month,Date.Day,Date.Day_week,Date.Term)
-        SELECT test_inmon2.Date.Month, test_inmon2.Date.Day, test_inmon2.Date.Week_day, test_inmon2.Date.Term
-        FROM test_inmon2.Date;
+        SELECT Inmon_DWH.Date.Month, Inmon_DWH.Date.Day, Inmon_DWH.Date.Week_day, Inmon_DWH.Date.Term
+        FROM Inmon_DWH.Date;
 
