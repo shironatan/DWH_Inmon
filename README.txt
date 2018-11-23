@@ -6,7 +6,7 @@ OS : Ubuntu 18.04.1 LTS
 MYSQL : MYSQL 5.7.24-0ubuntu0.18.04.1
 
 ##使い方
-$ git clone https://github.com/shironatan/DWH_Inmon
+$ sudo git clone https://github.com/shironatan/DWH_Inmon
 
 １．DB構築と構築時間を測定
 $ pwd
