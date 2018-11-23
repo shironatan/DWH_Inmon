@@ -12,7 +12,7 @@ $ git clone https://github.com/shironatan/DWH_Inmon
 $ pwd
  ...../DWH_Inmon/Inmon
 $ cd CreateDir
-$ time sudo ./Create.sh
+$ sudo ./Main.sh
  DWHをInmonモデルで構築...
  my.cnfファイルを新規作成
  UserName : MYSQLのユーザアカウントを入力
