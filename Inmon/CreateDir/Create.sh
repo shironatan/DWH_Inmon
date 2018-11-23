@@ -161,8 +161,7 @@ fi
 
 
 Main(){
-echo "DWHをInmonモデルで構築..."
-Pass
+Connect
 Createtest
 DWH
 DM1
