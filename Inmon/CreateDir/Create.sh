@@ -6,7 +6,7 @@ Pass(){
 	if [[ -f $FILE ]]; then
 		Connect
 	else
-		echo "my.cnfファイルを作成"
+		echo "my.cnfファイルを新規作成"
 		echo "[client]" > $FILE
 		read -p "UserName : " UserName
 		echo "user = $UserName" >> $FILE
