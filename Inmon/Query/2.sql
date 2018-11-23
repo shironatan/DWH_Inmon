@@ -1,4 +1,4 @@
-use test_inmon_DM2;
+use Inmon_DM2;
 SELECT D1.Category1_name AS 原作分類,D2.Tweet AS ツイート端数,
  SUM(F.Sale_number_count) AS 作品数, TRUNCATE(AVG(F.Sale_number),0) AS 売上数値平均 FROM Sale F
 INNER JOIN Category D1
