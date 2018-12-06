@@ -1,7 +1,7 @@
 #!/bin/bash
 #my.cnfファイルが存在するか
 Pass(){
-        FILE="my.cnf"
+        FILE=".my.cnf"
         if [[ -f $FILE ]]; then
                 Connect
         else
@@ -21,11 +21,11 @@ Pass(){
 
 #MYSQL接続テスト
 Connect(){
-        mysql --defaults-extra-file=./my.cnf -e"\q"
+        mysql --defaults-extra-file=./.my.cnf -e"\q"
         echo "MYSQL接続中..."
         if [ $? -eq 1 ]; then
                 echo "MYSQL接続 : False"
-                echo "my.cnfFile内を確認"
+                echo ".my.cnfFile内を確認"
                 exit 1
 	else
 		echo "MYSQL接続 : Done"
@@ -34,7 +34,7 @@ Connect(){
 
 Query (){
 	echo "クエリ実行結果"
-        time mysql --defaults-extra-file=./my.cnf -e "source $SQLFile"
+        time mysql --defaults-extra-file=./.my.cnf -e "source $SQLFile"
 }
 
 Main (){

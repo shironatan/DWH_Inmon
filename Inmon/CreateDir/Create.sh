@@ -143,10 +143,12 @@ begin;
 use Inmon_DM3;
 source ./DM3_Table/Category.sql;
 source ./DM3_Table/Stories.sql;
+source ./DM3_Table/Date.sql;
 source ./DM3_Table/Sale.sql;
 commit;
 source ./DM3_Data/Category.sql;
 source ./DM3_Data/Stories.sql;
+source ./DM3_Data/Date.sql;
 source ./DM3_Data/Sale.sql;
 commit;
 EOF
