@@ -1,8 +1,7 @@
 #!/bin/bash
 #ファイルが存在するか
 File(){
-	echo $1
-	if [ ! -f $1 ];
+	if [ ! -f $1 ]
        	then
 		echo "存在しないファイル名です"
 		exit 1
@@ -15,27 +14,29 @@ Colum(){
 	local i=2
 	local j=3
 	local colum
-	colum=`sed -n '2p' $1 | awk '{print $1}'`
-	if [ "$colum" != "SELECT" ] && [ "$colum" != "select" ];
+	#カラムをきれいにする
+	local colum_list=`sed -n '2p' $1 | sed 's/,/, /g' | sed 's/,  /, /g'`
+	colum=`echo $colum_list | cut -d' ' -f1`
+	echo $colum
+	if [ "$colum" != "SELECT" ] && [ "$colum" != "select" ]
 	then
 		echo "2行目にSELECT文があるファイルにしてください"
 		exit 1
 	fi
-	colum=`sed -n '2p' $1 | awk '{print $'$i'}'`
+	colum=`echo $colum_list | cut -d' ' -f$i`
 	while [ "$colum" != "" ]
 	do
-		if [ "AS" == `sed -n '2p' $1 | awk '{print $'$j'}'` ] #ASがある場合
+		if [ "AS" == `echo $colum_list | cut -d' ' -f$(( $i + 1 ))` ] #ASがある場合
 		then
-			i=`expr $i + 2`
-			ARRAY+=(`sed -n '2p' $1 | awk '{print $'$i'}' | sed 's/,//'`)
-			let i++
-			j=`expr $j + 3`
+			echo $colum
+			ARRAY+=(`echo $colum_list | awk '{print $'$(( $i + 2 ))'}' | sed 's/,//'`)
+			i=$(( $i + 3 ))
 		else
+			echo $colum
 			ARRAY+=(`echo $colum | sed 's/,//'`)
-			let i++
-			let j++
+			i=$(( $i + 1 ))
 		fi
-		colum=`sed -n '2p' $1 | awk '{print $'$i'}'`
+		colum=`echo $colum_list | cut -d' ' -f$i`
 	done
 }
 #並び替え
@@ -48,12 +49,21 @@ Sort(){
 	do
 		COLUM+=("$colum")
 		read -p "DESC/ASC：" colum
+		Check $colum
 		COLUM+=("$colum")
 		read -p "ORDER BYに指定する項目を優先度が高いものから選んでください[終了:q]：" colum
 	done
 	if [ 0 -eq "${#COLUM[@]}" ]
 	then
 		echo "ORDER指定なし、終了します。"
+	fi
+}
+#DESC/ASC判定
+Check(){
+	if [ ! "`echo "$1" | grep -i -e "^desc$" -e "^asc$"`" == $1 ]
+	then
+		echo -e "DESC/ASCではない入力\n最初からやり直してください。"
+		exit 1
 	fi
 }
 #SQLを組み立てる(引数：ファイル名）
@@ -69,7 +79,7 @@ Update_SQL(){
 		else
 			ordersql="$ordersql, ${COLUM[$i]} ${COLUM[$i+1]}"
 		fi
-		i=`expr $i + 2`
+		i=$(( $i + 2 ))
 		if [ $i -eq ${#COLUM[@]} ]
 		then
 			break

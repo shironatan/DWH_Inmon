@@ -1,51 +1,79 @@
 #!/bin/bash
-#my.cnfファイルが存在するか
-Pass(){
-        FILE=".my.cnf"
-        if [[ -f $FILE ]]; then
-                Connect
-        else
-                echo "my.cnfファイルを新規作成"
-                echo "[client]" > $FILE
-                read -p "UserName : " UserName
-                echo "user = $UserName" >> $FILE
-                read -s -p "Password : " Password
-                echo "password = $Password" >> $FILE
-                echo
-                read -p "HostName : " HostName
-                echo "host = $HostName" >> $FILE
-                echo "my.cnfファイル新規作成完了"
-                Connect
-        fi
+
+#ファイルが存在するか
+File(){
+	if [ ! -e $SQLFILE ]
+       	then
+		echo "ファイルが見つかりません"
+		exit 1
+	fi
+}
+
+#ユーザー変更
+Change(){
+        local file=".my.cnf"
+	local username
+	local password
+	local hostname
+	echo "ユーザーを新規作成・変更"
+	read -p "ユーザー名 : " username </dev/tty
+	read -s -p "パスワード : " password </dev/tty
+	echo
+	read -p "ホスト名 : " hostname </dev/tty
+	#ファイル内にかきこみ
+	{ echo "[client]";
+		echo "user = $username";
+		echo "password = $password";
+		echo "host = $hostname";
+	} > $file
+	echo "変更完了"
+}
+
+#ログインユーザー選ぶ
+Account(){
+	local file=".my.cnf"
+	local login_user
+	if [ ! -e $file ]
+	then
+		Change
+	fi
+	echo "/* ログインユーザー */"
+	cat $file | grep 'user = ' | awk '{print $3}'
+	read -p"ユーザー名を指定[変更:change] : " login_user </dev/tty
+	if [ "$login_user" = "change" ]
+	then
+		Change
+		Account
+	else
+		USER="$login_user"
+	fi
+
 }
 
 #MYSQL接続テスト
 Connect(){
-        mysql --defaults-extra-file=./.my.cnf -e"\q"
-        echo "MYSQL接続中..."
-        if [ $? -eq 1 ]; then
-                echo "MYSQL接続 : False"
-                echo ".my.cnfFile内を確認"
+	local file=".my.cnf"
+	local ret
+	ret=`mysql --defaults-extra-file=./$file -u $USER -e"select user();"`
+	if [ $? -eq 1 ]
+	then
+                echo "MYSQLに接続できませんでした。"
                 exit 1
 	else
-		echo "MYSQL接続 : Done"
+		echo "MYSQLに接続できました"
+		local user_list=`echo $ret | awk '{ print $2; }'`
+		echo "$user_listでログインしました"
         fi
 }
 
-Query (){
+Query(){
+	local file=".my.cnf"
 	echo "クエリ実行結果"
-        time mysql --defaults-extra-file=./.my.cnf -e "source $SQLFile"
+        time mysql --defaults-extra-file=./$file -u $USER -e "source $SQLFILE;"
 }
 
-Main (){
-	read -p "SQLFile名 : " SQLFile
-	if [[ -f $SQLFile ]]; then
-                Pass
-	else
-		echo "ファイルが見つかりません。"
-		exit 1
-	fi
-	Query
-}
-
-Main
+read -p "SQLファイル名：" SQLFILE
+File
+Account
+Connect
+Query

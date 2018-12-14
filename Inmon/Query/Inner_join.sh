@@ -5,7 +5,7 @@ File(){
 	SQLFILE="$1.sql"
 	if [ -f $SQLFILE ];
        	then
-		echo "既に存在するファイルです。上書きしていきます。"
+		echo "$SQLFILEに上書きしていきます"
 	else
 		echo "$SQLFILEを新規作成"
 	fi
@@ -35,14 +35,14 @@ Change(){
 Account(){
 	local file=".my.cnf"
 	local login_user
-	if [ ! -e $file ];
+	if [ ! -e $file ]
 	then
 		Change
 	fi
 	echo "/* ログインユーザー */"
 	cat $file | grep 'user = ' | awk '{print $3}'
 	read -p"ユーザー名を指定[変更:change] : " login_user </dev/tty
-	if [ "$login_user" = "change" ];
+	if [ "$login_user" = "change" ]
 	then
 		Change
 		Account
@@ -73,7 +73,7 @@ Show_DB(){
 	local file=".my.cnf"
 	local ret
 	ret=`mysql --defaults-extra-file=./$file -u $USER -e "show databases;"`
-	if [ $? -gt 0 ];
+	if [ $? -gt 0 ]
 	then
 		exit 0
 	fi
@@ -111,7 +111,8 @@ Check_table(){
 	local ret
 	local file=".my.cnf"
 	ret=`mysql --defaults-extra-file=./$file -u $USER -e "use $1;select * FROM $2;"`
-        if [ $? -gt 0 ]; then
+        if [ $? -gt 0 ]
+       	then
                 echo "存在しないテーブル名です"
                 echo "最初からやり直してください"
                 exit 1
@@ -122,7 +123,8 @@ Check_colum(){
 	local ret
 	local file=".my.cnf"
 	ret=`mysql --defaults-extra-file=./$file -u $USER -e "use $1;select $3 FROM $2;"`
-        if [ $? -gt 0 ]; then
+        if [ $? -gt 0 ]
+	then
                 echo "存在しない項目名です"
                 echo "最初からやり直してください"
                 exit 1
@@ -168,6 +170,7 @@ Fact_JOIN(){
 	Show_Table $1
 	read -p "メインテーブルを入力：" table </dev/tty
 	Check_table $1 $table
+	Targ_Colum $1 $table
 	TABLE+=($table)
 	echo
 }
@@ -230,26 +233,23 @@ FACT_COLUM(){
 	local cname
 	table="${TABLE[0]}"
 	Show_TableInf $1 $table
-	echo "集合関数オプション使う場合：option"
+	echo "集合関数は直接入力"
 	read -p "$tableテーブル抽出項目名[終了:q]：" colum
 	#テーブル内の表示項目を決める
 	while [ "$colum" != "q" ]
 	do
-		#集合関数オプション
-		if [ "$colum" == "option" ]
+		#集合関数分別
+		if [ "`echo $colum | grep "("`" == "$colum" ]
 		then
-			echo "MAX(hoge),SUM(hoge),COUNT(hoge)...."
-			read -p "集合関数付項目名入力：" colum
-			AGG_COLUM+=("$colum")
+			AGG_COLUM+=($colum)
 			read -p "$colum項目の表示名[項目名と同一:q]：" cname
-			AGG_COLUM+=("$cname")
+			AGG_COLUM+=($cname)
 		else
 			Check_colum $1 $table $colum
-			SHOW_COLUM+=("$table.$colum")
+			SHOW_COLUM+=($colum)
 			read -p "$colum項目の表示名[項目名と同一:q]：" cname
-			SHOW_COLUM+=("$cname")
+			SHOW_COLUM+=($cname)
 		fi
-		echo "集合関数オプションを使う場合：option"
 		read -p "$tableテーブル抽出項目名[終了:q]：" colum
 	done
 	#抽出項目判定
@@ -357,7 +357,7 @@ SQL_1(){
 				GROUP="$GROUP, ${SHOW_COLUM[i+1]}"
 			fi
 		fi
-		i=`expr $i + 2 `
+		i=$(( $i + 2 ))
 		#要素数最大
 		if [ $i -eq ${#SHOW_COLUM[@]} ]
 		then
@@ -385,7 +385,7 @@ SQL_1(){
 				SELECT="$SELECT, ${AGG_COLUM[i]} AS ${AGG_COLUM[i+1]}"
 			fi
 		fi
-		i=`expr $i + 2 `
+		i=$(( $i + 2 ))
 		#要素数最大
 		if [ $i -eq ${#AGG_COLUM[@]} ]
 		then
@@ -407,7 +407,7 @@ SQL_2(){
 		else
 			JOIN="$JOIN\nINNER JOIN ${TABLE[j]} ON ${JOIN_COLUM[i]} = ${JOIN_COLUM[i+1]}"
 		fi
-		i=`expr $i + 2 `
+		i=$(( $i + 2 ))
 		let j++
 		if [ $i -eq ${#JOIN_COLUM[@]} ]
 		then
@@ -428,7 +428,7 @@ SQL_3(){
 		else
 			WHERE="$WHERE AND ${TARG_COLUM[i]}.${TARG_COLUM[i+1]} = \"${TARG_COLUM[i+2]}\""
 		fi
-		i=`expr $i + 3 `
+		i=$(( $i + 3 ))
 		if [ $i -eq ${#TARG_COLUM[@]} ]
 		then
 			break
