@@ -14,7 +14,7 @@ $ pwd
 $ cd CreateDir
 $ sudo ./Main.sh
  DWHをInmonモデルで構築...
- my.cnfファイルを新規作成
+ my.cnfファイルを新規作成rm 
  UserName : MYSQLのユーザアカウントを入力
  Password : 対応するパスワードを入力
  HostName : ホスト名を入力(localhostなど)
@@ -25,11 +25,15 @@ $ pwd
  ...../DWH_Inmon/Inmon
 $ cd Query
 $ sudo ./Query.sh
- SQLFile名 : ファイル名を入力(1.sqlなど)
- my.cnfファイルを新規作成
- UserName : MYSQLのユーザアカウントを入力
- Password : 対応するパスワードを入力
- HostName : ホスト名を入力(localhostなど)
+ SQLファイル名 : ファイル名を入力(1.sqlなど)
+ ユーザーを新規作成・変更
+ ユーザー名 : MYSQLのユーザアカウントを入力
+ パスワード : 対応するパスワードを入力
+ ホスト名 : ホスト名を入力(localhostなど)
+ 変更完了
+ /* ログインユーザー */
+ hoge
+ ユーザー名を指定[変更:change] : hoge
  ..
  
 ３．各DBのサイズを測定
