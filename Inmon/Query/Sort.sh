@@ -15,7 +15,7 @@ Colum(){
 	local j=3
 	local colum
 	#カラムをきれいにする
-	local colum_list=`sed -n '2p' $1 | sed 's/,/, /g' | sed 's/,  /, /g'`
+	local colum_list=`sed -n '2p' $1`
 	colum=`echo $colum_list | cut -d' ' -f1`
 	echo $colum
 	if [ "$colum" != "SELECT" ] && [ "$colum" != "select" ]
